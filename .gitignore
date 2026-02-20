@@ -1,0 +1,28 @@
+# Environment files (contient des secrets)
+.env
+.env.local
+.env.*.local
+
+# Dépendances
+vendor/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+
+# Cache
+/tmp/
+cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Fichiers de build
+*.phar
