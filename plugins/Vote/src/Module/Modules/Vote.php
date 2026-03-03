@@ -127,6 +127,14 @@ class Vote implements ModuleInterface
         // Essayer d'extraire l'user_id du message
         $userId = $this->extractUserId($content);
 
+        if ($userId === null) {
+            // Impossible d'extraire l'user_id → réagir avec ❓ pour indiquer une incertitude
+            $message->react('❓');
+            debug("Message de vote détecté mais user_id non trouvé: {$content}");
+
+            return;
+        }
+
         // Enregistrer le vote via l'API
         try {
             $response = $wrapper->API->vote()->register($userId, $channelId);
