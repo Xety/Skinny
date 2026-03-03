@@ -6,6 +6,8 @@ echo "🚀 Deploying Skinny Bot..."
 cd /home/forge/Skinny
 
 # Pull code
+sudo -u forge git reset --hard
+sudo -u forge git clean -df
 sudo -u forge git pull origin main
 
 # Install dependencies
