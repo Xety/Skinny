@@ -42,8 +42,18 @@ class Palworld implements ModuleInterface
      */
     public function onChannelMessage(Wrapper $wrapper, array $content): void
     {
-        // Cette méthode est appelée pour les messages normaux
-        // On l'utilise pour détecter les messages webhook Palworld
+        // Get configured Palworld webhook channels
+        $palworldChannels = Configure::read('Discord.channels.palworld') ?? [];
+
+        // Check if the message is from a Palworld channel
+        if (
+            !in_array($wrapper->Message->channel_id, $palworldChannels) ||
+            $wrapper->Message->webhook_id === null
+        ){
+            return;
+        }
+
+        $this->onWebhookMessage($wrapper, $wrapper->Message);
     }
 
     /**
@@ -277,10 +287,14 @@ class Palworld implements ModuleInterface
             ->setFooter('Palworld Division')
             ->setTimestamp();
 
+        $originalMessage = $wrapper->Message;
+
         // Envoyer en DM si possible, sinon dans le channel
-        $wrapper->Message->author->sendMessage(MessageBuilder::new()->addEmbed($embed))
-            ->then(function () use ($wrapper) {
-                $wrapper->Message->react('✅');
+        $wrapper->Message->author
+            ->sendMessage(MessageBuilder::new()
+            ->addEmbed($embed))
+            ->then(function () use ($originalMessage) {
+                $originalMessage->react('✅');
             })
             ->otherwise(function () use ($wrapper, $embed) {
                 $wrapper->Message->reply(MessageBuilder::new()->addEmbed($embed));

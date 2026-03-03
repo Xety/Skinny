@@ -121,19 +121,6 @@ class Server
 
         // Event::MESSAGE_CREATE
         $this->Discord->on(Event::MESSAGE_CREATE, function (Message $message, Discord $discord) {
-            // Handle webhook messages (for Palworld integration)
-            if ($message->webhook_id !== null) {
-                $this->handleWebhookMessage($message, $discord);
-                return;
-            }
-
-            // Check if the author of the message is not a bot.
-            if ($message->author === null ||
-                $message->author->id == $discord->id ||
-                $message->author->bot
-            ) {
-                return;
-            }
 
             // Parse the message.
             $content = MessageParser::parse($message->content ?? '');
@@ -221,31 +208,6 @@ class Server
                 'error' => $error
             ]));
         });
-    }
-
-    /**
-     * Handle webhook messages (e.g., from game servers like Palworld).
-     *
-     * @param \Discord\Parts\Channel\Message $message The webhook message.
-     * @param \Discord\Discord $discord The Discord instance.
-     *
-     * @return void
-     */
-    private function handleWebhookMessage(Message $message, Discord $discord): void
-    {
-        // Get configured Palworld webhook channels
-        $palworldChannels = Configure::read('Discord.channels.palworld') ?? [];
-
-        // Check if the message is from a Palworld channel
-        if (!in_array($message->channel_id, $palworldChannels)) {
-            return;
-        }
-
-        // Initialise the Wrapper
-        $wrapper = Wrapper::getInstance()->setInstances($this->ModuleManager, $discord, $message);
-
-        // Forward to ModuleManager for Palworld processing
-        $this->ModuleManager->onWebhookMessage($wrapper, $message);
     }
 
     /**

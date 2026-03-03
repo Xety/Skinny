@@ -112,7 +112,7 @@ class Moderation implements ModuleInterface
                 return $wrapper->Message->delete();
             });
 
-            // Reply to the author and then delete this same mesage.
+            // Reply to the author and then delete this same message.
             $wrapper->Message
                 ->reply('Vous n\'êtes pas autorisé à parler dans ce channel sauf pour utiliser la '.
                     'commande `-ticket open`.')

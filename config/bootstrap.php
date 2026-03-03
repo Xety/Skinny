@@ -68,5 +68,6 @@ Plugin::load([
     //'Ticket',
     //'Steam',
     //'Moderation',
-    'Palworld'
+    'Palworld',
+    'Vote'
 ], ['bootstrap' => true]);
