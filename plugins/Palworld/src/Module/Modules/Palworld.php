@@ -176,6 +176,10 @@ class Palworld implements ModuleInterface
 
         $discordId = $pendingLink['discord_id'];
 
+        // Normaliser le PlayerUID : si le premier segment fait 16 chars (ex: FFFFFFFFA249B111),
+        // on ne garde que les 8 derniers (ex: A249B111).
+        $playerUID = preg_replace('/^[A-F0-9]{8}([A-F0-9]{8}-)/i', '$1', $playerUID);
+
         // Effectuer la liaison via l'API
         try {
             $wrapper->API->palworld()->createLink($discordId, $playerUID, $playerName);

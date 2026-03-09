@@ -16,6 +16,9 @@ sudo -u forge composer install --no-dev --optimize-autoloader
 # Clear cache if needed
 sudo -u forge rm -rf tmp/*.tmp
 
+# Set correct permissions
+sudo chmod +x deploy.sh
+
 # Restart bot
 sudo supervisorctl restart skinny-bot
 
